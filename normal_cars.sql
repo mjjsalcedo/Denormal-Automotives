@@ -25,19 +25,21 @@ CREATE TABLE car_model (
 CREATE TABLE car_year (
   id SERIAL PRIMARY KEY,
   year INT NOT NULL
-)
+);
 
-INSERT INTO car_make(make_code, make_title)
-SELECT DISTINCT make_code, make_title
-FROM car_models;
-
-
-INSERT INTO car_model(model_code, model_title)
-SELECT DISTINCT model_code, model_title
-FROM car_models;
+INSERT INTO car_make(make_code, make_title)(
+  SELECT DISTINCT make_code, make_title
+  FROM car_models);
 
 
-INSERT INTO car_year(year)
-SELECT DISTINCT year
-FROM car_models;
+INSERT INTO car_model(model_code, model_title, car_make_id)(
+  SELECT DISTINCT model_code, model_title, car_make.id
+  FROM car_models
+  INNER JOIN car_make ON car_make.make_title = car_models.make_title);
+
+INSERT INTO car_year(year)(
+  SELECT DISTINCT year
+  FROM car_models);
+
+
 
