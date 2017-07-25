@@ -11,6 +11,7 @@ CREATE DATABASE denormal_cars WITH OWNER denormal_user;
 
 SELECT DISTINCT make_title
 FROM car_models;
+ORDER BY make_title;
 
 SELECT DISTINCT model_title
 FROM car_models
