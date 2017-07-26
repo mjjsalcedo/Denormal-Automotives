@@ -4,7 +4,8 @@ DROP DATABASE IF EXISTS normal_cars;
 DROP USER IF EXISTS normal_user;
 
 CREATE USER normal_user;
-CREATE DATABASE normal_cars WITH OWNER normal_user;
+CREATE DATABASE normal_cars
+WITH OWNER normal_user;
 
 \c normal_cars
 \i scripts/denormal_data.sql
@@ -45,10 +46,12 @@ INSERT INTO car_year(year)(
 
 
 INSERT INTO car_model(model_code, model_title, car_make_id, car_make_year)(
-  SELECT DISTINCT model_code, model_title, car_make.id, car_year.id
-  FROM car_models
-  INNER JOIN car_make ON car_make.make_title = car_models.make_title
-  INNER JOIN car_year ON car_year.year = car_models.year);
+  SELECT DISTINCT c.model_code, c.model_title, m.id, y.id
+  FROM car_models c
+  INNER JOIN car_make m
+  ON m.make_title = c.make_title
+  INNER JOIN car_year y
+  ON y.year = c.year);
 
 
 SELECT DISTINCT make_title
@@ -56,23 +59,26 @@ FROM car_make
 ORDER BY make_title ASC;
 
 
-SELECT DISTINCT model_title
-FROM car_model
-INNER JOIN car_make ON car_make.id = car_model.car_make_id
-WHERE make_code = 'VOLKS'
-ORDER BY model_title ASC;
+SELECT DISTINCT c.model_title
+FROM car_model c
+INNER JOIN car_make m ON m.id = c.car_make_id
+WHERE m.make_code = 'VOLKS'
+ORDER BY c.model_title ASC;
 
 
-SELECT DISTINCT make_code, model_code, model_title, year
-FROM car_model
-INNER JOIN car_make ON car_make.id = car_model.car_make_id
-INNER JOIN car_year ON car_year.id = car_model.car_make_year
-WHERE car_make.make_code = 'LAM'
-ORDER BY model_title ASC;
+SELECT DISTINCT m.make_code, c.model_code, c.model_title, y.year
+FROM car_model c
+INNER JOIN car_make m
+ON m.id = c.car_make_id
+INNER JOIN car_year y
+ON y.id = c.car_make_year
+WHERE m.make_code = 'LAM'
+ORDER BY c.model_title ASC;
 
 
-SELECT DISTINCT car_model.*
-FROM car_model
-LEFT JOIN car_year ON car_year.id = car_model.car_make_year
-WHERE car_year.year <= 2015 AND car_year.year >= 2010
-ORDER BY car_model.id ASC;
+SELECT DISTINCT m.*
+FROM car_model m
+LEFT JOIN car_year y
+ON y.id = m.car_make_year
+WHERE y.year <= 2015 AND y.year >= 2010
+ORDER BY m.id ASC;
