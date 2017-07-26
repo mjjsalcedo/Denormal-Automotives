@@ -29,7 +29,8 @@ CREATE TABLE car_year (
 
 INSERT INTO car_make(make_code, make_title)(
   SELECT DISTINCT make_code, make_title
-  FROM car_models);
+  FROM car_models
+  ORDER BY make_code ASC);
 
 
 INSERT INTO car_model(model_code, model_title, car_make_id)(
@@ -37,9 +38,17 @@ INSERT INTO car_model(model_code, model_title, car_make_id)(
   FROM car_models
   INNER JOIN car_make ON car_make.make_title = car_models.make_title);
 
+
 INSERT INTO car_year(year)(
   SELECT DISTINCT year
   FROM car_models);
 
 
+SELECT DISTINCT make_title
+FROM car_models;
 
+
+SELECT DISTINCT model_title
+FROM car_model
+INNER JOIN car_make ON car_make.id = car_model.car_make_id
+WHERE make_code = 'VOLKS';
